@@ -9,6 +9,9 @@ venv/
 env/
 ENV/
 
+# Visual Studio
+.vs/
+
 # Базы данных
 *.db
 *.sqlite
