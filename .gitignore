@@ -1,0 +1,29 @@
+# Файлы Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Виртуальное окружение
+venv/
+env/
+ENV/
+
+# Базы данных
+*.db
+*.sqlite
+*.sqlite3
+
+# Переменные окружения
+.env
+.env.local
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Логи и временные файлы
+*.log
+
+# MacOS
+.DS_Store
