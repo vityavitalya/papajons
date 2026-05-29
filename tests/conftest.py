@@ -1,41 +1,36 @@
 ﻿import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from fastapi.testclient import TestClient
+from sqlalchemy.pool import StaticPool
 
+from app import crud
 from app.database import Base, get_db
 from app.main import app
-from app import crud
 from app.schemas import CurrencyCreate, ExchangeRateCreate
 
 
 @pytest.fixture(scope="function")
 def db_session():
-
     engine = create_engine(
-        "sqlite:///:memory:",
-        connect_args={"check_same_thread": False}
+        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
     )
 
     Base.metadata.create_all(bind=engine)
 
-    TestingSessionLocal = sessionmaker(
-        autocommit=False,
-        autoflush=False,
-        bind=engine
-    )
+    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     db = TestingSessionLocal()
 
     try:
         yield db
+
     finally:
         db.close()
 
 
 @pytest.fixture(scope="function")
 def client(db_session):
-
     def override_get_db():
         try:
             yield db_session
@@ -52,23 +47,10 @@ def client(db_session):
 
 @pytest.fixture
 def sample_currencies(db_session):
-
     currencies_data = [
-        CurrencyCreate(
-            code="USD",
-            full_name="US Dollar",
-            sign="$"
-        ),
-        CurrencyCreate(
-            code="EUR",
-            full_name="Euro",
-            sign="€"
-        ),
-        CurrencyCreate(
-            code="RUB",
-            full_name="Russian Ruble",
-            sign="₽"
-        ),
+        CurrencyCreate(code="USD", full_name="US Dollar", sign="$"),
+        CurrencyCreate(code="EUR", full_name="Euro", sign="€"),
+        CurrencyCreate(code="RUB", full_name="Russian Ruble", sign="₽"),
     ]
 
     currencies = {}
@@ -82,17 +64,12 @@ def sample_currencies(db_session):
 
 @pytest.fixture
 def sample_exchange_rates(db_session, sample_currencies):
-
     rates_data = [
         ExchangeRateCreate(
-            base_currency_code="USD",
-            target_currency_code="EUR",
-            rate=0.92
+            base_currency_code="USD", target_currency_code="EUR", rate=0.92
         ),
         ExchangeRateCreate(
-            base_currency_code="USD",
-            target_currency_code="RUB",
-            rate=92.50
+            base_currency_code="USD", target_currency_code="RUB", rate=92.50
         ),
     ]
 

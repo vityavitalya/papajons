@@ -1,0 +1,26 @@
+[Unit]
+Description=Currency Exchange API Service
+After=network.target
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/currency-exchange
+Environment="PATH=/var/www/currency-exchange/venv/bin"
+Environment="DEBUG=False"
+Environment="HOST=127.0.0.1"
+Environment="PORT=8000"
+ExecStart=/var/www/currency-exchange/venv/bin/uvicorn app.main:app --host
+127.0.0.1 --port 8000 --workers 4
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5
+
+Инструкция по установке сервиса (документация):
+
+10.3. Создание Docker-конфигурации (продвинутый вариант)
+Почему Docker? Контейнеризация решает проблему «на моём компьютере работает, а
+на сервере — нет».
+Создаём файл Dockerfile :
+[Install]
+WantedBy=multi-user.target

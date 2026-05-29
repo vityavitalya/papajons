@@ -3,21 +3,16 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 from app.config import config
 
-
 engine = create_engine(
     config.DATABASE_URL,
-    connect_args={
-        "check_same_thread": False
-    } if "sqlite" in config.DATABASE_URL else {},
+    connect_args=(
+        {"check_same_thread": False} if "sqlite" in config.DATABASE_URL else {}
+    ),
     echo=config.DEBUG,
 )
 
 
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 Base = declarative_base()
